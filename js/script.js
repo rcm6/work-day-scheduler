@@ -10,9 +10,11 @@ function displayTime() {
 
 //Present timeblocks for standard business hours when the user scrolls down.
 
-//check if local storage is empty
+//check if local storage exists
 
-// if empty, set local storage to below tiemblocks
+if (localStorage.getItem("storedBlocks") === null) {
+
+    // if null set local storage to below timeblocks
 var timeBlocks = [
     {
       hour: 9,
@@ -24,7 +26,7 @@ var timeBlocks = [
     },
     {
         hour: 11,
-        description: "",
+        description: "test again",
     },
     {
         hour: 12,
@@ -36,7 +38,7 @@ var timeBlocks = [
     },
     {
         hour: 14,
-        description: "",
+        description: "test",
     },
     {
         hour: 15,
@@ -55,26 +57,34 @@ var timeBlocks = [
 
 //set local storage
 localStorage.setItem("storedBlocks", JSON.stringify(timeBlocks));
+    
+  }
+//Persist events between refreshes of a page.
+//generate timeblocks from local storage
 
-//generate empty timeblocks
+var retreivedBlocks = JSON.parse(window.localStorage.getItem("storedBlocks"));
+console.log(retreivedBlocks)
 
-for ( i = 0; i < timeBlocks.length; i++) {
+console.log(retreivedBlocks[0].hour)
+
+
+for ( i = 0; i < retreivedBlocks.length; i++) {
+
+    displayHour = moment().hours(retreivedBlocks[i].hour).format("ha")
+    
+    console.log(displayHour);
 
     $(".container").append(
-        `<div id="${i+9}" class="col-md-12 time-block row">
-        <div id="hour" class="col-md-2 hour">${i+9}</div>
-        <textarea id="description" class="col-md-9 description"></textarea>
-        <button class="col-md-1 saveBtn">
+        `<div id="${(retreivedBlocks[i].hour)}" class="col-md-12 time-block row">
+        <div id="hour" class="col-md-2 hour">${moment().hours(retreivedBlocks[i].hour).format("h a")}</div>
+        <textarea id="description" class="col-md-9 description">${(retreivedBlocks[i].description)}</textarea>
+        <button class="col-md-1 saveBtn" onclick = "saveTime(${(retreivedBlocks[i].hour)})">
                         <span class="fas fa-save"></span>
                     </button>
         </div>`
     );
 
 };
-
-//if not empty, generate timeblocks based on local storage
-
-
 
 //Color-code each timeblock based on past, present, and future when the timeblock is viewed.
 function colourCode() {
@@ -111,4 +121,8 @@ function colourCode() {
 
 
 
-//Persist events between refreshes of a page.
+function saveTime(arr) {
+    var saveHour = arr;
+console.log(saveHour);
+    
+};
