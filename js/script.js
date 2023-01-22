@@ -7,7 +7,7 @@ function displayTime() {
   }
   setInterval(displayTime, 1000);
 
-  
+
 //Present timeblocks for standard business hours when the user scrolls down.
 
 //Color-code each timeblock based on past, present, and future when the timeblock is viewed.
