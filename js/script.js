@@ -77,7 +77,7 @@ for ( i = 0; i < retreivedBlocks.length; i++) {
     $(".container").append(
         `<div id="${(retreivedBlocks[i].hour)}" class="col-md-12 time-block row">
         <div id="hour" class="col-md-2 hour">${moment().hours(retreivedBlocks[i].hour).format("h a")}</div>
-        <textarea id="description" class="col-md-9 description">${(retreivedBlocks[i].description)}</textarea>
+        <textarea id="description${(retreivedBlocks[i].hour)}" class="col-md-9 description">${(retreivedBlocks[i].description)}</textarea>
         <button class="col-md-1 saveBtn" onclick = "saveTime(${(retreivedBlocks[i].hour)})">
                         <span class="fas fa-save"></span>
                     </button>
@@ -122,7 +122,17 @@ function colourCode() {
 
 
 function saveTime(arr) {
-    var saveHour = arr;
-console.log(saveHour);
-    
+    var saveHour = arr
+    var blockIndex = (saveHour - 9);
+    //console.log("savehour: " + saveHour);
+    //console.log("blockindex: " + blockIndex);
+    newDescription = $("#description" + saveHour).val()
+    //console.log ("new description: " + newDescription)
+    //var myvar = retreivedBlocks[blockIndex].description;
+    //console.log("current description: " +myvar)
+
+    //update array
+    retreivedBlocks[blockIndex].description = newDescription
+    //update local storage
+    localStorage.setItem("storedBlocks", JSON.stringify(retreivedBlocks));
 };
