@@ -6,133 +6,110 @@ function displayTime() {
     $("#currentDay").text(currentDate);
   }
   setInterval(displayTime, 1000);
-
-
-//Present timeblocks for standard business hours when the user scrolls down.
-
-//check if local storage exists
-
-if (localStorage.getItem("storedBlocks") === null) {
-
-    // if null set local storage to below timeblocks
-var timeBlocks = [
-    {
-      hour: 9,
-      description: "",
-    },
-    {
+  
+  //Present timeblocks for standard business hours when the user scrolls down.
+  //Persist events between refreshes of a page.
+  
+  //check if local storage exists
+  if (localStorage.getItem("storedBlocks") === null) {
+    // if null initialise local storage to below timeblocks
+    var timeBlocks = [
+      {
+        hour: 9,
+        description: "",
+      },
+      {
         hour: 10,
         description: "",
-    },
-    {
+      },
+      {
         hour: 11,
-        description: "test again",
-    },
-    {
+        description: "",
+      },
+      {
         hour: 12,
         description: "",
-    },
-    {
+      },
+      {
         hour: 13,
         description: "",
-    },
-    {
+      },
+      {
         hour: 14,
-        description: "test",
-    },
-    {
+        description: "",
+      },
+      {
         hour: 15,
         description: "",
-    },
-    {
+      },
+      {
         hour: 16,
         description: "",
-    },
-    {
+      },
+      {
         hour: 17,
         description: "",
-    },
-  ];
-  console.log(timeBlocks)
-
-//set local storage
-localStorage.setItem("storedBlocks", JSON.stringify(timeBlocks));
-    
+      },
+    ];
+    //console.log(timeBlocks);
+  
+    //set local storage
+    localStorage.setItem("storedBlocks", JSON.stringify(timeBlocks));
   }
-//Persist events between refreshes of a page.
-//generate timeblocks from local storage
-
-var retreivedBlocks = JSON.parse(window.localStorage.getItem("storedBlocks"));
-console.log(retreivedBlocks)
-
-console.log(retreivedBlocks[0].hour)
-
-
-for ( i = 0; i < retreivedBlocks.length; i++) {
-
-    displayHour = moment().hours(retreivedBlocks[i].hour).format("ha")
-    
-    console.log(displayHour);
-
+  
+  //generate timeblocks from local storage
+  
+  //create variable to hold local storage array
+  var retreivedBlocks = JSON.parse(window.localStorage.getItem("storedBlocks"));
+  //console.log(retreivedBlocks)
+  //console.log(retreivedBlocks[0].hour)
+  
+  for (i = 0; i < retreivedBlocks.length; i++) {
+    var displayHour = moment().hours(retreivedBlocks[i].hour).format("h a");
+    var currentHour = moment().format("HH");
+    var blockHour = retreivedBlocks[i].hour;
+    var textDescription = retreivedBlocks[i].description;
+  
+    //Color-code each timeblock based on past, present, and future when the timeblock is viewed.
+    if (blockHour < currentHour) {
+      classTime = "past";
+    } else if (blockHour == currentHour) {
+      classTime = "present";
+    } else {
+      classTime = "future";
+    }
+  
+    //console.log (classTime)
+    //console.log("c: " + currentHour)
+    //console.log("b: " + blockHour)
+    //console.log(displayHour);
+  
+    //append timeblock to container
     $(".container").append(
-        `<div id="${(retreivedBlocks[i].hour)}" class="col-md-12 time-block row">
-        <div id="hour" class="col-md-2 hour">${moment().hours(retreivedBlocks[i].hour).format("h a")}</div>
-        <textarea id="description${(retreivedBlocks[i].hour)}" class="col-md-9 description">${(retreivedBlocks[i].description)}</textarea>
-        <button class="col-md-1 saveBtn" onclick = "saveTime(${(retreivedBlocks[i].hour)})">
-                        <span class="fas fa-save"></span>
-                    </button>
-        </div>`
+      `<div id="${blockHour}" class="col-md-12 time-block row ${classTime}">
+          <div id="hour" class="col-md-2 hour">${displayHour}</div>
+          <textarea id="description${blockHour}" class="col-md-9 description">${textDescription}</textarea>
+          <button class="col-md-1 saveBtn" onclick = "saveTime(${blockHour})">
+          <span class="fas fa-save"></span>
+          </button>
+          </div>`
     );
-
-};
-
-//Color-code each timeblock based on past, present, and future when the timeblock is viewed.
-function colourCode() {
-    let currentHour = moment().format("HH");
-    
-            // loop time blocks
-            $(".time-block").each(function () {
-              var blockHour = parseInt($(this).attr("id"));
-              console.log("c: " + currentHour)
-              console.log("b: " + blockHour)
-    
-              //check against current time
-              if (blockHour < currentHour) {
-                  $(this).addClass("past");
-                  $(this).removeClass("future");
-                  $(this).removeClass("present");
-              }
-              else if (blockHour === currentHour) {
-                  $(this).removeClass("past");
-                  $(this).addClass("present");
-                  $(this).removeClass("future");
-              }
-              else {
-                  $(this).removeClass("present");
-                  $(this).removeClass("past");
-                  $(this).addClass("future");
-              }
-          })
-      }
-      colourCode();
-
-      
-//Allow a user to enter an event when they click a timeblock.
-
-
-
-function saveTime(arr) {
-    var saveHour = arr
-    var blockIndex = (saveHour - 9);
+  }
+  
+  function saveTime(arr) {
+    var saveHour = arr;
+    var blockIndex = saveHour - 9;
     //console.log("savehour: " + saveHour);
     //console.log("blockindex: " + blockIndex);
-    newDescription = $("#description" + saveHour).val()
+  
+    //get description from calendar textarea
+    var newDescription = $("#description" + saveHour).val();
     //console.log ("new description: " + newDescription)
     //var myvar = retreivedBlocks[blockIndex].description;
     //console.log("current description: " +myvar)
-
+  
     //update array
-    retreivedBlocks[blockIndex].description = newDescription
+    retreivedBlocks[blockIndex].description = newDescription;
     //update local storage
     localStorage.setItem("storedBlocks", JSON.stringify(retreivedBlocks));
-};
+  };
