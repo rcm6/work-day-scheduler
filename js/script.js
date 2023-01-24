@@ -99,4 +99,5 @@ function displayTime() {
     retreivedBlocks[blockIndex].description = newDescription;
     //update local storage
     localStorage.setItem("storedBlocks", JSON.stringify(retreivedBlocks));
+    alert("Saved to local storage");
   };
