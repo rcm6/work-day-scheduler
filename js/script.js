@@ -51,7 +51,6 @@ function displayTime() {
         description: "",
       },
     ];
-    //console.log(timeBlocks);
   
     //set local storage
     localStorage.setItem("storedBlocks", JSON.stringify(timeBlocks));
@@ -61,8 +60,6 @@ function displayTime() {
   
   //create variable to hold local storage array
   var retreivedBlocks = JSON.parse(window.localStorage.getItem("storedBlocks"));
-  //console.log(retreivedBlocks)
-  //console.log(retreivedBlocks[0].hour)
   
   for (i = 0; i < retreivedBlocks.length; i++) {
     var displayHour = moment().hours(retreivedBlocks[i].hour).format("h a");
@@ -79,11 +76,6 @@ function displayTime() {
       classTime = "future";
     }
   
-    //console.log (classTime)
-    //console.log("c: " + currentHour)
-    //console.log("b: " + blockHour)
-    //console.log(displayHour);
-  
     //append timeblock to container
     $(".container").append(
       `<div id="${blockHour}" class="col-md-12 time-block row ${classTime}">
@@ -99,14 +91,9 @@ function displayTime() {
   function saveTime(arr) {
     var saveHour = arr;
     var blockIndex = saveHour - 9;
-    //console.log("savehour: " + saveHour);
-    //console.log("blockindex: " + blockIndex);
   
     //get description from calendar textarea
     var newDescription = $("#description" + saveHour).val();
-    //console.log ("new description: " + newDescription)
-    //var myvar = retreivedBlocks[blockIndex].description;
-    //console.log("current description: " +myvar)
   
     //update array
     retreivedBlocks[blockIndex].description = newDescription;
